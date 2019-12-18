@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -63,7 +64,49 @@ public class DetailActivity extends AppCompatActivity {
         }
         Log.e("cek list", "" + listMahasiswas.size());
     }
+    public  Boolean onItemLongClick(final AdapterView<?> adapter final long id){
+        //tampilkan dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_view);
+        dialog.setTitle("Pilih Aksi");
+        dialog.show();
+        final Barang b = (Barang) getListAdapter().getItem(pos);
+        editButton = (Button) dialog.findViewById(R.id.button_edit_data);
+        delButton = (Button) dialog.findViewById(R.id.button_delete_data);
 
+        //apabila tombol edit diklik
+        editButton.setOnClickListener(
+                new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        switchToEdit(b.getId());
+                        dialog.dismiss();
+                    }
+                }
+        );
+
+        //apabila tombol delete di klik
+        delButton.setOnClickListener(
+                new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v) {
+                        // Delete barang
+                        dataSource.deleteBarang(b.getId());
+                        dialog.dismiss();
+                        finish();
+                        startActivity(getIntent());
+                    }
+                }
+        );
+
+        return true;
+
+    }
+
+    }
     private void initRecyclerView() {
         myRecyclerview.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
